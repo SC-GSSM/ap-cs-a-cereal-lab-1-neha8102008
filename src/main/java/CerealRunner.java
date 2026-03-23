@@ -1,36 +1,42 @@
 import java.util.Scanner;
 import java.util.ArrayList;
-import java.io.File;
+
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 
 public class CerealRunner
 {
-    // create a private instance variable to store an ArrayList of Cereal objects
+    private ArrayList<Cereal> cereals;
 
     public CerealRunner(String fileName)
     {
-        // instantiate the ArrayList
+        cereals = new ArrayList<>();
 
         try
         {
             FileReader fileRdr = new FileReader(fileName);
             Scanner scan = new Scanner(fileRdr);
-            while(scan.hasNext())
-            {
+            
+            while(scan.hasNextLine()){
                 String myStr = scan.nextLine();
-
-                // use the split method to parse the data into an array of
-                //   String objects
-
-                // go through each String array element and save it
-                //   into the appropriate variable which will be used to
-                //   create a Cereal object
-
-                // create a new Cereal object, and add it to the ArrayList
-
+                if(myStr.isEmpty()) continue;
+                String[] data = myStr.split(",");
+                try {
+                int calories = Integer.parseInt(data[1]);
+                double fiber = Double.parseDouble(data[2]);
+                double carbohydrates = Double.parseDouble(data[3]);
+                double cups = Double.parseDouble(data[4]);
+                String name = data[0];
+                Cereal c = new Cereal(name, calories, fiber, carbohydrates, cups);
+                cereals.add(c);
+                }catch (NumberFormatException | ArrayIndexOutOfBoundsException e){
+                    continue;
+                }
             }
             scan.close();
+            
+            
+        
 
 
         } catch (FileNotFoundException e)
@@ -46,7 +52,7 @@ public class CerealRunner
     public static void main(String[] args)
     {
         String fileName = "src/data/cerealSubset.csv";
-        CerealRunner cr = new CerealRunner(fileName);
+        new CerealRunner(fileName);
     }
 
 }
